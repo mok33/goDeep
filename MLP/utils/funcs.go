@@ -5,6 +5,7 @@ import (
     "fmt"
     "math"
     )
+
 func min(a, b int) int {
     if a < b {
         return a
@@ -19,24 +20,32 @@ func MatPrint(X mat.Matrix) {
 }
 
 
-type Activation func(units *mat.VecDense)
+type Activation struct{
+    Function, Derivative func(units *mat.Dense)
+}
 
-func Sigmoid(units *mat.VecDense) {
-    for i := 0; i < units.Len(); i++{
-        v := units.At(i, 0)
-        units.SetVec(i, 1 /(1 + math.Exp(-1 * v)))
+func Sigmoid(units *mat.Dense) {
+    size_out, size_in := units.Dims()
+
+    for r := 0; r < size_in; r++{
+        for c := 0; c < size_out; c++{
+            v := units.At(r, c)
+            units.Set(r, c, 1 /(1 + math.Exp(-1 * v)))
+        }
     }
 }
 
 func Linear(units *mat.VecDense){}
 
 
-type Cost func(*mat.VecDense, *mat.VecDense) (float64)
+type Cost func(*mat.Dense, *mat.Dense) (float64)
 
-func MSE(y_hat *mat.VecDense, y *mat.VecDense) (float64){
-    var mse *mat.VecDense
-    mse.SubVec(y, y_hat)
-    return mat.Dot(mse, mse)
+func MSE(y_hat, y *mat.Dense) *mat.Dense{
+    var mse *mat.Dense
+
+    mse.Sub(y, y_hat)
+    mse.Mul(mse, mse.T())
+    return mse
 }
 
 func GetMiniBatch(population *mat.Dense, mini_batch_i, mini_batch_size int) *mat.Dense{
@@ -49,3 +58,4 @@ func GetMiniBatch(population *mat.Dense, mini_batch_i, mini_batch_size int) *mat
 
     return mini_batch
 }
+

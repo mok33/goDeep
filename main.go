@@ -1,7 +1,7 @@
 package main
 import (
-    . "dl/MLP"
-    . "dl/MLP/utils"
+    . "goDeep/MLP"
+    . "goDeep/MLP/utils"
 )
 
 func main() {
@@ -19,5 +19,4 @@ func main() {
     MatPrint(nn.Hiddens[0].Units)
     println("hidden layer 2 output")
     MatPrint(nn.Hiddens[1].Units)
-
 }
