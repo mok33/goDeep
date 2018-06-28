@@ -10,7 +10,7 @@ func main() {
     out := Dense{N_Units: 1, Sigma: Sigmoid}
 
     nn := NewMLP([]Dense{layer_1, layer_2}, 2, &out)
-    nn.L = MSE
+    nn.J = MSE
 
     ouput_layer := nn.FeedForward()
     print("output: ")
